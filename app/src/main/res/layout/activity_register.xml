@@ -134,6 +134,7 @@
         android:layout_height="40dp"
         android:background="@drawable/round_border"
         android:ems="10"
+        android:fontFamily="sans-serif"
         android:hint="Confirm Password"
         android:inputType="textPassword"
         android:padding="10dp"

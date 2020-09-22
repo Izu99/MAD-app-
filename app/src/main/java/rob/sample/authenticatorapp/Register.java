@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class Register extends AppCompatActivity {
 
@@ -24,6 +25,21 @@ public class Register extends AppCompatActivity {
     Button mRegister;
     FirebaseAuth fAuth;
     ProgressBar mprogressBar;
+
+//    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//if (user!= null) {
+//        // Name, email address, and profile photo Url
+//        String name = user.getDisplayName();
+//        String email = user.getEmail();
+//
+//        // Check if user's email is verified
+//        boolean emailVerified = user.isEmailVerified();
+//
+//        // The user's ID, unique to the Firebase project. Do NOT use this value to
+//        // authenticate with your backend server, if you have one. Use
+//        // FirebaseUser.getIdToken() instead.
+//        String uid = user.getUid();
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,32 +66,42 @@ public class Register extends AppCompatActivity {
         mRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String fullname = mFullName.getText().toString().trim();
                 String email = mEmail.getText().toString().trim();
-                String password =mPassword.getText().toString().trim();
+                String phone = mPhone.getText().toString().trim();
+                String password = mPassword.getText().toString().trim();
+                String confirmpassword = mconfirmpassword.getText().toString().trim();
 
-                if (TextUtils.isEmpty(email)) {
+
+                if (TextUtils.isEmpty(fullname)) {
+
+                    mFullName.setError("Full Name is Require");
+
+                } else if (TextUtils.isEmpty(email)) {
 
                     mEmail.setError("Email is Require");
-                    return;
-                } else if(!password.equals(mconfirmpassword)){
-                    Toast.makeText(Register.this,"Password Not matching",Toast.LENGTH_SHORT).show();
-                }
 
-                if (TextUtils.isEmpty(password)) {
+                } else if (TextUtils.isEmpty(phone)) {
 
-                    mPassword.setError("Email is Password");
-                    return;
+                    mPhone.setError("Phone Number is Require");
 
-                }
+                } else if (TextUtils.isEmpty(password)) {
 
-                if (password.length() <6) {
+                    mPassword.setError("Password is Require");
+
+                } else if (password.length() < 6) {
+
                     mPassword.setError("Password require 6 digits");
-                    return;
-                }
+
+                } else if (!password.equals(confirmpassword)) {
+
+                    mconfirmpassword.setError("Password Not matching");
+
+                } else {
 
                 mprogressBar.setVisibility(View.VISIBLE);
 
-                fAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
@@ -91,6 +117,9 @@ public class Register extends AppCompatActivity {
                         }
                     }
                 });
+
+            }
+
             }
 
         });
