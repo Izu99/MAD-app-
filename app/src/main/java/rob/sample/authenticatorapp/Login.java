@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -55,10 +56,8 @@ public class Login extends AppCompatActivity {
 
                     mEmail.setError("Email is Require");
                     return;
-                }
 
-                if (TextUtils.isEmpty(password)) {
-
+                } else if (TextUtils.isEmpty(password)) {
                     mPassword.setError("Password is Require");
                     return;
                 }
@@ -120,9 +119,6 @@ public class Login extends AppCompatActivity {
                                 Toast.makeText(Login.this, "Reset Link Not Sent. "+ e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
-
-
-
                     }
                 });
 

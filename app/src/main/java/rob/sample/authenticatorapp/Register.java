@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +18,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.regex.Pattern;
 
 public class Register extends AppCompatActivity {
 
@@ -67,7 +70,7 @@ public class Register extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String fullname = mFullName.getText().toString().trim();
-                String email = mEmail.getText().toString().trim();
+                final String email = mEmail.getText().toString().trim();
                 String phone = mPhone.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
                 String confirmpassword = mconfirmpassword.getText().toString().trim();
@@ -76,6 +79,7 @@ public class Register extends AppCompatActivity {
                 if (TextUtils.isEmpty(fullname)) {
 
                     mFullName.setError("Full Name is Require");
+
 
                 } else if (TextUtils.isEmpty(email)) {
 
@@ -105,15 +109,17 @@ public class Register extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
-                        if (task.isSuccessful()) {
-                            Toast.makeText(Register.this, "Register Successfully", Toast.LENGTH_LONG).show();
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-
-                        } else {
-
-                            Toast.makeText(Register.this, "Error! ", Toast.LENGTH_LONG).show();
+                        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                            Toast.makeText(Register.this, "Invalid Email Address",Toast.LENGTH_LONG).show();
                             mprogressBar.setVisibility(View.GONE);
 
+                        } else if (!task.isSuccessful()) {
+                            Toast.makeText(Register.this, "Error! "+ task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            mprogressBar.setVisibility(View.GONE);
+
+                        } else {
+                            Toast.makeText(Register.this, "Register Successfully", Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         }
                     }
                 });
