@@ -27,4 +27,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(getApplicationContext(),Login.class));
         finish();
     }
+
+    public void feedbackPage(View view) {
+        FirebaseAuth.getInstance();
+        startActivity(new Intent(getApplicationContext(),feedbackUser.class));
+        finish();
+    }
 }

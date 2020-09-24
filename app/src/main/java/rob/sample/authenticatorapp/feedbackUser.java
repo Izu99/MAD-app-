@@ -17,32 +17,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
-
-
-import java.util.HashMap;
-import java.util.Map;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class feedbackUser extends AppCompatActivity implements View.OnClickListener {
 
-    EditText txtid,txtName,txtAdd,txtConNo;
+    EditText txtName,txtEmail,txtFeedback;
     Button btnSave,btnShow,btnUpdate,btnDelete;
     DatabaseReference dbRef,dbRef2;
-    feedbackclass std;
+    feedbackclass fb;
     int count = 0;
-    String countString,iString;
-    String temp,temp2,temp3,temp4,itemp;
+    String countString;
+    String temp;
     Map<String,Object> updateMap;
 
     public static final String EXTRA_MESSAGE = " ";
@@ -52,17 +38,16 @@ public class feedbackUser extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback_user);
 
-        txtid = (EditText) findViewById(R.id.txt1);
-        txtName = (EditText)findViewById(R.id.txt2);
-        txtAdd = (EditText)findViewById(R.id.txt3);
-        txtConNo = (EditText)findViewById(R.id.txt4);
+        txtName = (EditText) findViewById(R.id.txt1);
+        txtEmail = (EditText)findViewById(R.id.txt2);
+        txtFeedback = (EditText)findViewById(R.id.txt3);
 
         btnSave = (Button)findViewById(R.id.btnAdd);
         btnShow = (Button)findViewById(R.id.btnShow);
         btnUpdate = (Button)findViewById(R.id.btnUpdate);
         btnDelete = (Button)findViewById(R.id.btnDelete);
 
-        std = new feedbackclass();
+        fb = new feedbackclass();
 
         btnSave.setOnClickListener(this);
         btnShow.setOnClickListener(this);
@@ -86,16 +71,12 @@ public class feedbackUser extends AppCompatActivity implements View.OnClickListe
     }
 
     public void Delete(){
-        //dbRef = FirebaseDatabase.getInstance().getReference().child("feedbackclass/Std2");
-        // dbRef.removeValue();
-        //Toast.makeText(getApplicationContext(), "Successfully Deleted", Toast.LENGTH_SHORT).show();
 
 
         for(int i = 1; i <= count; i++) {
-            //iString = String.valueOf(i);
-            //itemp = "Std" + iString;
+
             dbRef2 = FirebaseDatabase.getInstance().getReference();
-            Query deleteQuery = dbRef2.child("feedbackclass").orderByChild("id").equalTo(txtid.getText().toString().trim());
+            Query deleteQuery = dbRef2.child("feedbackclass").orderByChild("name").equalTo(txtName.getText().toString().trim());
             deleteQuery.addListenerForSingleValueEvent(new ValueEventListener() {
 
                 @Override
@@ -119,12 +100,12 @@ public class feedbackUser extends AppCompatActivity implements View.OnClickListe
         for(int i = 1; i <= count; i++){
 
             dbRef2 = FirebaseDatabase.getInstance().getReference();
-            Query updateQuery = dbRef2.child("feedbackclass").orderByChild("id").equalTo(txtid.getText().toString().trim());
-            updateMap = new HashMap<String,Object>();
+            Query updateQuery = dbRef2.child("feedbackclass").orderByChild("name").equalTo(txtName.getText().toString().trim());
+            updateMap = new HashMap<>();
             updateMap.put("name",txtName.getText().toString().trim());
-            updateMap.put("address",txtAdd.getText().toString().trim());
-            updateMap.put("id",txtid.getText().toString().trim());
-            updateMap.put("conNo",txtConNo.getText().toString().trim());
+            updateMap.put("email",txtEmail.getText().toString().trim());
+            updateMap.put("feedback",txtFeedback.getText().toString().trim());
+
             updateQuery.addListenerForSingleValueEvent(new ValueEventListener() {
 
                 @Override
@@ -135,24 +116,10 @@ public class feedbackUser extends AppCompatActivity implements View.OnClickListe
 
                         updateSnapshot.getRef().updateChildren(updateMap);
 
-
-                        //updateSnapshot.getRef().child("name").setValue(txtName.getText().toString().trim());
-                        //updateSnapshot.getRef().child("address").setValue(txtAdd.getText().toString().trim());
-                        //updateSnapshot.getRef().child("id").setValue(txtid.getText().toString().trim());
-                        //updateSnapshot.getRef().child("conNo").setValue(txtConNo.getText().toString().trim());
                         Toast.makeText(getApplicationContext(), "Successfully Updated", Toast.LENGTH_SHORT).show();
                         clearControls();
                     }
-                    //if(dataSnapshot.hasChildren()){
-                    //    if(txtid.getText().toString().trim().equals(dataSnapshot.child("id").getValue().toString().trim())){
-                    //        dbRef2.child("feedbackclass").child(itemp).child("name").setValue(txtName.getText().toString().trim());
-                    //        dbRef2.child("feedbackclass").child(itemp).child("address").setValue(txtAdd.getText().toString().trim());
-                    //        dbRef2.child("feedbackclass").child(itemp).child("id").setValue(txtid.getText().toString().trim());
-                    //       dbRef2.child("feedbackclass").child(itemp).child("conNo").setValue(txtConNo.getText().toString().trim());
-                    //       Toast.makeText(getApplicationContext(), "Successfully Updated", Toast.LENGTH_SHORT).show();
-                    //       clearControls();
-                    //     }
-                    //}
+
                 }
 
                 @Override
@@ -160,19 +127,7 @@ public class feedbackUser extends AppCompatActivity implements View.OnClickListe
 
                 }
             });
-
         }
-
-        //dbRef.child("feedbackclass").child("Std2").child("name").setValue(txtName.getText().toString().trim());
-        //dbRef.child("feedbackclass/Std2/address").setValue(txtAdd.getText().toString().trim());
-        //dbRef.child("feedbackclass/Std2/id").setValue(txtid.getText().toString().trim());
-        //dbRef.child("feedbackclass/Std2/conNo").setValue(txtConNo.getText().toString().trim());
-        //dbRef.child("feedbackclass").child(temp).child("name").setValue(txtName.getText().toString().trim());
-        //dbRef.child(temp2).setValue(txtAdd.getText().toString().trim());
-        //dbRef.child(temp3).setValue(txtid.getText().toString().trim());
-        //dbRef.child(temp4).setValue(txtConNo.getText().toString().trim());
-        //Toast.makeText(getApplicationContext(), "Successfully Updated", Toast.LENGTH_SHORT).show();
-        //clearControls();
     }
 
     public void Show(){
@@ -180,33 +135,27 @@ public class feedbackUser extends AppCompatActivity implements View.OnClickListe
         Intent intent = new Intent(this,ShowPage.class);
         intent.putExtra(EXTRA_MESSAGE, String.valueOf(count));
         startActivity(intent);
-
-
     }
 
     public void Save(){
         dbRef = FirebaseDatabase.getInstance().getReference().child("feedbackclass");
         try{
-            if(TextUtils.isEmpty(txtid.getText().toString()))
-                Toast.makeText(getApplicationContext(),"Empty id",Toast.LENGTH_SHORT).show();
-            else if(TextUtils.isEmpty(txtName.getText().toString()))
+            if(TextUtils.isEmpty(txtName.getText().toString()))
                 Toast.makeText(getApplicationContext(),"Empty Name",Toast.LENGTH_SHORT).show();
-            else if(TextUtils.isEmpty(txtAdd.getText().toString()))
-                Toast.makeText(getApplicationContext(),"Empty Address",Toast.LENGTH_SHORT).show();
-            else if(TextUtils.isEmpty(txtConNo.getText().toString()))
-                Toast.makeText(getApplicationContext(),"Empty Contact No",Toast.LENGTH_SHORT).show();
+            else if(TextUtils.isEmpty(txtEmail.getText().toString()))
+                Toast.makeText(getApplicationContext(),"Empty Email",Toast.LENGTH_SHORT).show();
+            else if(TextUtils.isEmpty(txtFeedback.getText().toString()))
+                Toast.makeText(getApplicationContext(),"Empty Feedback",Toast.LENGTH_SHORT).show();
             else{
 
                 count += 1;
                 countString = String.valueOf(count);
-                temp = "Std" + countString;
+                temp = "fb" + countString;
 
-                std.setID(txtid.getText().toString().trim());
-                std.setName(txtName.getText().toString().trim());
-                std.setAddress(txtAdd.getText().toString().trim());
-                std.setConNo(Integer.parseInt(txtConNo.getText().toString().trim()));
-                dbRef.child(temp).setValue(std);
-                //dbRef.child("Std2").setValue(std);
+                fb.setName(txtName.getText().toString().trim());
+                fb.setEmail(txtEmail.getText().toString().trim());
+                fb.setFeedback(txtFeedback.getText().toString().trim());
+                dbRef.child(temp).setValue(fb);
                 Toast.makeText(getApplicationContext(),"Successfully Inserted",Toast.LENGTH_SHORT).show();
                 clearControls();
             }
@@ -216,9 +165,8 @@ public class feedbackUser extends AppCompatActivity implements View.OnClickListe
     }
 
     private void clearControls(){
-        txtid.setText("");
         txtName.setText("");
-        txtAdd.setText("");
-        txtConNo.setText("");
+        txtEmail.setText("");
+        txtFeedback.setText("");
     }
 }

@@ -18,6 +18,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.regex.Pattern;
 
@@ -28,21 +30,8 @@ public class Register extends AppCompatActivity {
     Button mRegister;
     FirebaseAuth fAuth;
     ProgressBar mprogressBar;
-
-//    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//if (user!= null) {
-//        // Name, email address, and profile photo Url
-//        String name = user.getDisplayName();
-//        String email = user.getEmail();
-//
-//        // Check if user's email is verified
-//        boolean emailVerified = user.isEmailVerified();
-//
-//        // The user's ID, unique to the Firebase project. Do NOT use this value to
-//        // authenticate with your backend server, if you have one. Use
-//        // FirebaseUser.getIdToken() instead.
-//        String uid = user.getUid();
-//    }
+    DatabaseReference databaseReference;
+    FirebaseDatabase firebaseDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +46,9 @@ public class Register extends AppCompatActivity {
         mRegister = findViewById(R.id.register);
         mloginText = findViewById(R.id.loginText);
 
+        databaseReference = FirebaseDatabase.getInstance().getReference("registerClass");
+        fAuth = FirebaseAuth.getInstance();
+
         fAuth = FirebaseAuth.getInstance();
         mprogressBar = findViewById(R.id.progressBar);
 
@@ -69,12 +61,15 @@ public class Register extends AppCompatActivity {
         mRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String fullname = mFullName.getText().toString().trim();
+                final String fullname = mFullName.getText().toString().trim();
                 final String email = mEmail.getText().toString().trim();
                 String phone = mPhone.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
                 String confirmpassword = mconfirmpassword.getText().toString().trim();
 
+                final String cfullName = mFullName.getText().toString().trim();
+                final String cEmail = mEmail.getText().toString().trim();
+                final String cPhone = mPhone.getText().toString().trim();
 
                 if (TextUtils.isEmpty(fullname)) {
 
@@ -109,6 +104,7 @@ public class Register extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
+
                         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                             Toast.makeText(Register.this, "Invalid Email Address",Toast.LENGTH_LONG).show();
                             mprogressBar.setVisibility(View.GONE);
@@ -120,6 +116,23 @@ public class Register extends AppCompatActivity {
                         } else {
                             Toast.makeText(Register.this, "Register Successfully", Toast.LENGTH_LONG).show();
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
+
+                            registerClass information = new registerClass(
+                                    cfullName,
+                                    cEmail,
+                                    cPhone
+                            );
+                            FirebaseDatabase.getInstance().getReference("registerClass")
+                                    .child(fAuth.getInstance().getCurrentUser().getUid())
+                                    .setValue(information).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+
+                                    Toast.makeText(Register.this, "Register Successfully", Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent (getApplicationContext(),MainActivity.class));
+
+                                }
+                            });
                         }
                     }
                 });

@@ -35,7 +35,7 @@ public class ShowPage extends AppCompatActivity implements View.OnClickListener{
         btnshow.setOnClickListener(this);
 
         Intent intent = getIntent();
-        count = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+        count = intent.getStringExtra(feedbackUser.EXTRA_MESSAGE);
         countInt = Integer.parseInt(count);
 
     }
@@ -53,15 +53,15 @@ public class ShowPage extends AppCompatActivity implements View.OnClickListener{
 
         for(int i = 1; i <= countInt ; i++){
             iString = String.valueOf(i);
-            itemp = "Std" + iString;
-            dbRef2 = FirebaseDatabase.getInstance().getReference().child("Student").child(itemp);
+            itemp = "fb" + iString;
+            dbRef2 = FirebaseDatabase.getInstance().getReference().child("feedbackclass").child(itemp);
             dbRef2.addListenerForSingleValueEvent(new ValueEventListener() {
 
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if(dataSnapshot.hasChildren()){
-                        txtShow.append(dataSnapshot.child("id").getValue().toString() + "\n"+ dataSnapshot.child("name").getValue().toString() + "\n"
-                                +dataSnapshot.child("address").getValue().toString() + "\n"+dataSnapshot.child("conNo").getValue().toString() + "\n\n");
+                        txtShow.append(dataSnapshot.child("name").getValue().toString() + "\n"+ dataSnapshot.child("email").getValue().toString() + "\n"
+                                +dataSnapshot.child("feedback").getValue().toString() + "\n"+dataSnapshot.child("conNo").getValue().toString() + "\n\n");
                     }
                 }
 
@@ -72,31 +72,7 @@ public class ShowPage extends AppCompatActivity implements View.OnClickListener{
             });
         }
 
-        /*
-        dbRef = FirebaseDatabase.getInstance().getReference().child("Student/Std2");
-        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChildren()){
 
-                    txtShow.setText(dataSnapshot.child("id").getValue().toString() + "\n"+ dataSnapshot.child("name").getValue().toString() + "\n"
-                            +dataSnapshot.child("address").getValue().toString() + "\n"+dataSnapshot.child("conNo").getValue().toString() + "\n\n");
-
-                    //txtid.setText(dataSnapshot.child("id").getValue().toString());
-                   // txtName.setText(dataSnapshot.child("name").getValue().toString());
-                   // txtAdd.setText(dataSnapshot.child("address").getValue().toString());
-                   // txtConNo.setText(dataSnapshot.child("conNo").getValue().toString());
-                }else{
-                    Toast.makeText(getApplicationContext(), "Cannot find Std2", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });*/
     }
 
 }

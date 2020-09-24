@@ -2,21 +2,12 @@ package rob.sample.authenticatorapp;
 
 public class feedbackclass {
 
-    private String id;
     private String name;
-    private String address;
-    private Integer conNo;
+    private String email;
+    private String feedback;
 
     public feedbackclass() {
 
-    }
-
-    public String getid() {
-        return id;
-    }
-
-    public void setID(String id) {
-        this.id= id;
     }
 
     public String getName() {
@@ -24,22 +15,26 @@ public class feedbackclass {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name= name;
     }
 
-    public String getAddress() {
-        return address;
+    public String getEmail() {
+        return email;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public Integer getConNo() {
-        return conNo;
+    public String getFeedback() {
+        return feedback;
     }
 
-    public void setConNo(Integer conNo) {
-        this.conNo = conNo;
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
     }
+
+
+
+
 }
